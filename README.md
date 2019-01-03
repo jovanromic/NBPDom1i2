@@ -1,2 +1,2 @@
 # NBPDom1i2
-proba u fajl
+proba u fajl STOSKE
