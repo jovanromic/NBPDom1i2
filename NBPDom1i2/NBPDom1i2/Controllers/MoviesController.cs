@@ -10,13 +10,6 @@ namespace NBPDom1i2.Controllers
 {
     public class MoviesController : Controller
     {
-        // GET: Movies
-        /*public ActionResult Index()
-        {
-            return View();
-        }
-        */
-
         // GET: Movies/Random
         public ActionResult Random()
         {
