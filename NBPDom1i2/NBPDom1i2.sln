@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBPDom1i2", "NBPDom1i2\NBPDom1i2.csproj", "{5D46D04D-AA7A-4F4F-A122-89E8C2A6471B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D46D04D-AA7A-4F4F-A122-89E8C2A6471B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D46D04D-AA7A-4F4F-A122-89E8C2A6471B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D46D04D-AA7A-4F4F-A122-89E8C2A6471B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D46D04D-AA7A-4F4F-A122-89E8C2A6471B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {208B5050-619F-4740-ACB9-11A9B227B813}
+	EndGlobalSection
+EndGlobal
