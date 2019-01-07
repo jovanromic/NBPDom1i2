@@ -10,7 +10,7 @@
 *@
 
 
-<h2>@Model.Movie.Name</h2>
+<h2>@Model.Movie.title</h2>
 
 @if (Model.Customers.Count == 0)
 {
@@ -21,7 +21,7 @@ else
     <ul>
         @foreach (var customer in Model.Customers)
         {
-            <li>@customer.Name</li>
+            <li>@customer.name</li>
         }
     </ul>
 }

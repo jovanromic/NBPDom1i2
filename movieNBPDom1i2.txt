@@ -1,9 +1,9 @@
 CREATE (Oceans11:Movie {title:"Ocean's Eleven", released:2001, description:'Danny Ocean and his eleven accomplices plan to rob three Las Vegas casinos simultaneously.
 '})
-CREATE (Clooney:Actor {name:'George', surname:'Clooney'})
-CREATE (Pitt:Actor {name:'Brad', surname:'Pitt'})
-CREATE (Damon:Actor {name:'Matt', surname:'Damon'})
-CREATE (StevenSoder:Director {name:'Steven', surname:'Soderbergh'})
+CREATE (Clooney:Actor {name:'George Clooney'})
+CREATE (Pitt:Actor {name:'Brad Pitt'})
+CREATE (Damon:Actor {name:'Matt Damon'})
+CREATE (StevenSoder:Director {name:'Steven Soderbergh'})
 CREATE (Action:Genre {name:'Action'})
 CREATE
 	(Clooney)-[:ACTED_IN]->(Oceans11),
@@ -13,9 +13,9 @@ CREATE
 	(Oceans11)-[:OF_TYPE]->(Action)
 
 CREATE (OnceUATinHollywood:Movie {title:'Once Upon a Time in Hollywood', released:2019, description:'A faded TV actor and his stunt double embark on an odyssey to make a name for themselves in the film industry during the Helter Skelter reign of terror in 1969 Los Angeles.'})
-CREATE (DiCaprio:Actor {name:'Leonardo', surname:'DiCaprio'})
-CREATE (Pacino:Actor {name:'Al', surname:'Pacino'})
-CREATE (Quentin:Director {name:'Quentin', surname:'Tarantino'})
+CREATE (DiCaprio:Actor {name:'Leonardo DiCaprio'})
+CREATE (Pacino:Actor {name:'Al Pacino'})
+CREATE (Quentin:Director {name:'Quentin Tarantino'})
 CREATE (Comedy:Genre {name:'Comedy'})
 CREATE
 	(Pitt)-[:ACTED_IN]->(OnceUATinHollywood),
@@ -25,9 +25,9 @@ CREATE
 	(OnceUATinHollywood)-[:OF_TYPE]->(Comedy)
 
 CREATE (Departed:Movie {title:'The Departed', released:2006, description:'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.'})
-CREATE (Nicholson:Actor {name:'Jack', surname:'Nicholson'})
-CREATE (Wahlberg:Actor {name:'Mark', surname:'Wahlberg'})
-CREATE (Scorsese:Director {name:'Martin', surname:'Scorsese'})
+CREATE (Nicholson:Actor {name:'Jack Nicholson'})
+CREATE (Wahlberg:Actor {name:'Mark Wahlberg'})
+CREATE (Scorsese:Director {name:'Martin Scorsese'})
 CREATE (Thriller:Genre {name:'Thriller'})
 CREATE
 	(Damon)-[:ACTED_IN]->(Departed),
@@ -38,11 +38,19 @@ CREATE
 	(Departed)-[:OF_TYPE]->(Thriller)
 
 CREATE (Shutter:Movie {title:'Shutter Island', released:2010, description:'In 1954, a U.S. Marshal investigates the disappearance of a murderer, who escaped from a hospital for the criminally insane.'})
-CREATE (Ruffalo:Actor {name:'Mark', surname:'Ruffalo'})
-CREATE (Kingsley:Actor {name:'Ben', surname:'Kinglsey'})
+CREATE (Ruffalo:Actor {name:'Mark Ruffalo'})
+CREATE (Kingsley:Actor {name:'Ben Kinglsey'})
 CREATE
 	(DiCaprio)-[:ACTED_IN]->(Shutter),
     	(Ruffalo)-[:ACTED_IN]->(Shutter),
 	(Kingsley)-[:ACTED_IN]->(Shutter),
 	(Scorsese)-[:DIRECTED]->(Shutter),
 	(Shutter)-[:OF_TYPE]->(Thriller)
+
+CREATE (BodyOfLies:Movie {title:'Body Of Lies', released:2008, description:'A CIA agent on the ground in Jordan hunts down a powerful terrorist leader while being caught between the unclear intentions of his American supervisors and Jordan Intelligence.'})
+CREATE (Crowe:Actor {name:'Russell Crowe'})
+CREATE (Scott:Director {name:'Ridley Scott'})
+CREATE
+	(DiCaprio)-[:ACTED_IN]->(BodyOfLies),
+    	(Crowe)-[:ACTED_IN]->(BodyOfLies),
+	(Scott)-[:DIRECTED]->(BodyOfLies)
