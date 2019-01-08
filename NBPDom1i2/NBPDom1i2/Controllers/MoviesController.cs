@@ -73,6 +73,7 @@ namespace NBPDom1i2.Controllers
 
         public ActionResult GetMovies(string title,string genre,string director,string actor)
         {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
             if (title != string.Empty)
             {
                 var data = WebApiConfig.GraphClient.Cypher
@@ -83,38 +84,16 @@ namespace NBPDom1i2.Controllers
 
                 return Content(data.First().title);
             }
-            else
+            else if (genre != string.Empty && director != string.Empty && actor != string.Empty)
             {
-                //var data = WebApiConfig.GraphClient.Cypher
-                //    .Match("(movie:Movie)")
-                //    .Where("{genre} IS NULL OR genre:{genre}")
-                //    .WithParam("genre",genre)
-                //    .Return(movie => movie.As<Movie>())
-                //    .Results;
-
-                //string content ="" ;
-                //foreach(Movie m in data)
-                //{
-                //    content += m.title + " " + m.description + "\n";
-                //}
-                //return Content(content);
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                //dictionary["genre"] = genre;
-                //if (genre == string.Empty)
-                //    genre = null;
                 dictionary.Add("genre", genre);
                 dictionary.Add("director", director);
                 dictionary.Add("actor", actor);
-                var query = new Neo4jClient.Cypher.CypherQuery("match (movie1:Movie) where " +
-                    "{ genre } is null or(movie1) -[:OF_TYPE]->(: Genre { name: { genre} })" +
-                //    "match (movie2:Movie) where" +
-                //    " {director} is null or (movie1) -[:DIRECTED]-(:Director { name: {director} })" +
-                //    "match (movie3:Movie) where" +
-                //    " {actor} is null or (movie2) -[:ACTED_IN]-(:Actor { name: {actor} })  " +
-
-                    "return distinct movie1",
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
+                    "(movie) <-[:DIRECTED]->(: Director {name: {director} })," +
+                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "return movie",
                     dictionary, CypherResultMode.Set);
-
 
                 List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
                     .ExecuteGetCypherResults<Movie>(query).ToList();
@@ -126,8 +105,114 @@ namespace NBPDom1i2.Controllers
                 }
                 return Content(content);
             }
+            else if (genre != string.Empty && director != string.Empty)
+            {
+                dictionary.Add("genre", genre);
+                dictionary.Add("director", director);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
+                    "(movie) <-[:DIRECTED]->(: Director {name: {director} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
 
-            
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
+            else if (genre != string.Empty && actor != string.Empty)
+            {
+                dictionary.Add("genre", genre);
+                dictionary.Add("actor", actor);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
+                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
+
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
+            else if (director != string.Empty && actor != string.Empty)
+            {
+                dictionary.Add("director", director);
+                dictionary.Add("actor", actor);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:DIRECTED]-(: Director { name: { director} })," +
+                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
+
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
+            else if (genre != string.Empty)
+            {
+                dictionary.Add("genre", genre);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
+
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
+            else if (director != string.Empty)
+            {
+                dictionary.Add("director", director);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:DIRECTED]->(: Director { name: { director} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
+
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
+            else 
+            {
+                dictionary.Add("actor", actor);
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:ACTED_IN]->(: Actor { name: { actor} })" +
+                    "return movie",
+                    dictionary, CypherResultMode.Set);
+
+                List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<Movie>(query).ToList();
+
+                string content = "";
+                foreach (Movie m in movies)
+                {
+                    content += m.title + " " + m.description + "<hr>";
+                }
+                return Content(content);
+            }
         }
     }
 }

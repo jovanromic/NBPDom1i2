@@ -53,4 +53,5 @@ CREATE (Scott:Director {name:'Ridley Scott'})
 CREATE
 	(DiCaprio)-[:ACTED_IN]->(BodyOfLies),
     	(Crowe)-[:ACTED_IN]->(BodyOfLies),
-	(Scott)-[:DIRECTED]->(BodyOfLies)
+	(Scott)-[:DIRECTED]->(BodyOfLies),
+	(BodyOfLies)-[:OF_TYPE]->(Thriller)
