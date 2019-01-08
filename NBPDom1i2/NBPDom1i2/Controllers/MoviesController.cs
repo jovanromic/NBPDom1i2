@@ -90,8 +90,8 @@ namespace NBPDom1i2.Controllers
                 dictionary.Add("director", director);
                 dictionary.Add("actor", actor);
                 var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
-                    "(movie) <-[:DIRECTED]->(: Director {name: {director} })," +
-                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "(movie) <-[:DIRECTED]-(: Director {name: {director} })," +
+                    "(movie) <-[:ACTED_IN]-(: Actor {name: {actor} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
@@ -110,7 +110,7 @@ namespace NBPDom1i2.Controllers
                 dictionary.Add("genre", genre);
                 dictionary.Add("director", director);
                 var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
-                    "(movie) <-[:DIRECTED]->(: Director {name: {director} })" +
+                    "(movie) <-[:DIRECTED]-(: Director {name: {director} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
@@ -129,7 +129,7 @@ namespace NBPDom1i2.Controllers
                 dictionary.Add("genre", genre);
                 dictionary.Add("actor", actor);
                 var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) -[:OF_TYPE]->(: Genre { name: { genre} })," +
-                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "(movie) <-[:ACTED_IN]-(: Actor {name: {actor} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
@@ -148,7 +148,7 @@ namespace NBPDom1i2.Controllers
                 dictionary.Add("director", director);
                 dictionary.Add("actor", actor);
                 var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:DIRECTED]-(: Director { name: { director} })," +
-                    "(movie) <-[:ACTED_IN]->(: Actor {name: {actor} })" +
+                    "(movie) <-[:ACTED_IN]-(: Actor {name: {actor} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
@@ -182,7 +182,7 @@ namespace NBPDom1i2.Controllers
             else if (director != string.Empty)
             {
                 dictionary.Add("director", director);
-                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:DIRECTED]->(: Director { name: { director} })" +
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:DIRECTED]-(: Director { name: { director} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
@@ -199,7 +199,7 @@ namespace NBPDom1i2.Controllers
             else 
             {
                 dictionary.Add("actor", actor);
-                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:ACTED_IN]->(: Actor { name: { actor} })" +
+                var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie) <-[:ACTED_IN]-(: Actor { name: { actor} })" +
                     "return movie",
                     dictionary, CypherResultMode.Set);
 
