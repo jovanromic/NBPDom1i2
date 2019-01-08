@@ -53,8 +53,18 @@ namespace NBPDom1i2.Controllers
             return Content("Id=" + id);
         }
 
+        public ActionResult Index()
+        {
+            TitleGenreActorDirectorView probni = new TitleGenreActorDirectorView();
+            probni.title = "Proba";
+            probni.genres.Add("Thriller");
+            probni.genres.Add("Action");
+            probni.genres.Add("Comedy");
+            return View(probni);
+        }
+
         // movies -> za stranu koja ce nam prikazivati listu svih filmova
-        public ActionResult Index(int? pageIndex, string sortBy) // ? - nullable, 
+        /*public ActionResult Index(int? pageIndex, string sortBy) // ? - nullable, 
         {
             if (!pageIndex.HasValue)
                 pageIndex = 1;
@@ -63,7 +73,7 @@ namespace NBPDom1i2.Controllers
                 sortBy = "Name";
 
             return Content(String.Format("pageIndex={0}&sortby={1}", pageIndex, sortBy));
-        }
+        }*/
 
         [Route("movies/released/{year}/{month:range(1,12)}")] //:range constraint na nivou parametra
         public ActionResult ByReleaseDate(int year, int month)
