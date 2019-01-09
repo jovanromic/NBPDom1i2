@@ -17,18 +17,43 @@
                         <th>Genre</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @foreach ( NBPDom1i2.ViewModels.MovieGenre d in Model.moviegenre)
+                    {
+                        <tr>
+                            <td>@d.movietitle</td>
+                            <td>@d.moviegenre</td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
-        <div class="col-sm-4">
-            <div class="form-group form-inline">
-                <label>Search</label>
-                <input type="text" class="form-control" />
+        @using (Html.BeginForm("GetMovies", "Movies"))
+        { <div class="col-sm-4">
+              <div class="form-group">
+                  @Html.Label("Search")
+                  @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
+              </div>
+                <div class="dropdown">
+                    @Html.Label("genres")
+                    @Html.DropDownListFor(m => m.genres, new SelectList(Model.genres), new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="dropdown">
+                    @Html.Label("directors")
+                    @Html.DropDownListFor(m => m.directors, new SelectList(Model.directors), new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="dropdown">
+                    @Html.Label("actors")
+                    @Html.DropDownListFor(m => m.actors, new SelectList(Model.actors), new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
             </div>
-            <div class="dropdown">
-                @Html.DropDownListFor(m => m.genres, new SelectList(Model.genres), new { @class = "form-control" })
-            </div>
-        </div>
+        }
     </div>
 </div>
 
