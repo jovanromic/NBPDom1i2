@@ -1,0 +1,29 @@
+﻿@model NBPDom1i2.ViewModels.CustomersSelectionViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("DeleteCustomer", "Customers"))
+{   <div class="container-fluid">
+        <h2>Customers</h2>
+        <div class="row">
+            <div class="col-sm-8">
+                <table id="movies" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Html.EditorFor(m => Model.customers)
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
