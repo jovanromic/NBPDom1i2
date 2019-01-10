@@ -20,10 +20,10 @@
                 <tbody>
                     @foreach ( NBPDom1i2.ViewModels.MovieGenre d in Model.moviegenre)
                     {
-                        <tr>
-                            <td>@d.movietitle</td>
-                            <td>@d.moviegenre</td>
-                        </tr>
+                    <tr>
+                        <td><a href="http://localhost:51894/Movie/@d.movietitle">@d.movietitle</a></td>
+                        <td>@d.moviegenre</td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -50,7 +50,7 @@
                 </div>
                 <br />
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary disabled">Search</button>
                 </div>
             </div>
         }

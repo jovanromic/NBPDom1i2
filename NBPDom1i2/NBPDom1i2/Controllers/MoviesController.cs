@@ -152,6 +152,44 @@ namespace NBPDom1i2.Controllers
             return Content(year + "/" + month);
         }
 
+        [Route("movie/{title}")]
+        public ActionResult MovieDetails(string title)
+        {
+            MovieDetail moviedetail = new MovieDetail();
+            //moviedetail.movie = new Movie { title = "Avatar",
+            //    description = "Plavi veliki ljudi protiv beli mali ljudi. Biju se.",
+            //    released = 2009, copies = 5 };
+            //moviedetail.genre = "Thriller";
+            //moviedetail.actors = new List<string> { "Actor 1", "Actor 2", "Actor 3" };
+
+            var data = WebApiConfig.GraphClient.Cypher.Match
+                ("(movie:Movie {title: {title}})-[OF_TYPE]-(genre:Genre)," +
+                //
+"(movie)-[ACTED_IN]-(actor:Actor)," +
+                "(movie)-[DIRECTED]-(director:Director)")
+                .WithParam("title", title)
+                .Return(() => new MovieDetail
+                {
+                    movie = Return.As<Movie>("movie"),
+                    genre = Return.As<string>("genre.name"),
+                    //actors = Return.As<List<string>>("actor.name"),
+                    director = Return.As<string>("director.name")
+                }).Results;
+
+            moviedetail = data.ToList()[0];
+
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", title);
+            var query = new Neo4jClient.Cypher.CypherQuery(
+                "match (actor:Actor)-[ACTED_IN]->(movie:Movie {title: {title}}) return actor.name"
+                , dictionary, CypherResultMode.Set);
+
+            moviedetail.actors = ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteGetCypherResults<string>(query).ToList();
+
+            return View("Detail",moviedetail);
+        }
+
         [HttpPost]
         public ActionResult GetMovies(TitleGenreActorDirectorView tgadv)
         {
@@ -391,5 +429,13 @@ namespace NBPDom1i2.Controllers
             }
         }
 
+        //[HttpPost]
+        //public ActionResult Rent(MovieDetail moviedetail)
+        //{
+        //    if(moviedetail.movie.copies>0)
+        //    {
+
+        //    }
+        //}
     }
 }

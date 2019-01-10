@@ -1,5 +1,5 @@
 CREATE (Oceans11:Movie {title:"Ocean's Eleven", released:2001, description:'Danny Ocean and his eleven accomplices plan to rob three Las Vegas casinos simultaneously.
-'})
+',copies: 5})
 CREATE (Clooney:Actor {name:'George Clooney'})
 CREATE (Pitt:Actor {name:'Brad Pitt'})
 CREATE (Damon:Actor {name:'Matt Damon'})
@@ -12,7 +12,7 @@ CREATE
 	(StevenSoder)-[:DIRECTED]->(Oceans11),
 	(Oceans11)-[:OF_TYPE]->(Action)
 
-CREATE (OnceUATinHollywood:Movie {title:'Once Upon a Time in Hollywood', released:2019, description:'A faded TV actor and his stunt double embark on an odyssey to make a name for themselves in the film industry during the Helter Skelter reign of terror in 1969 Los Angeles.'})
+CREATE (OnceUATinHollywood:Movie {title:'Once Upon a Time in Hollywood', released:2019, description:'A faded TV actor and his stunt double embark on an odyssey to make a name for themselves in the film industry during the Helter Skelter reign of terror in 1969 Los Angeles.',copies: 5})
 CREATE (DiCaprio:Actor {name:'Leonardo DiCaprio'})
 CREATE (Pacino:Actor {name:'Al Pacino'})
 CREATE (Quentin:Director {name:'Quentin Tarantino'})
@@ -24,7 +24,7 @@ CREATE
 	(Quentin)-[:DIRECTED]->(OnceUATinHollywood),
 	(OnceUATinHollywood)-[:OF_TYPE]->(Comedy)
 
-CREATE (Departed:Movie {title:'The Departed', released:2006, description:'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.'})
+CREATE (Departed:Movie {title:'The Departed', released:2006, description:'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.',copies: 5})
 CREATE (Nicholson:Actor {name:'Jack Nicholson'})
 CREATE (Wahlberg:Actor {name:'Mark Wahlberg'})
 CREATE (Scorsese:Director {name:'Martin Scorsese'})
@@ -37,7 +37,7 @@ CREATE
 	(Scorsese)-[:DIRECTED]->(Departed),
 	(Departed)-[:OF_TYPE]->(Thriller)
 
-CREATE (Shutter:Movie {title:'Shutter Island', released:2010, description:'In 1954, a U.S. Marshal investigates the disappearance of a murderer, who escaped from a hospital for the criminally insane.'})
+CREATE (Shutter:Movie {title:'Shutter Island', released:2010, description:'In 1954, a U.S. Marshal investigates the disappearance of a murderer, who escaped from a hospital for the criminally insane.',copies: 5})
 CREATE (Ruffalo:Actor {name:'Mark Ruffalo'})
 CREATE (Kingsley:Actor {name:'Ben Kinglsey'})
 CREATE
@@ -47,7 +47,7 @@ CREATE
 	(Scorsese)-[:DIRECTED]->(Shutter),
 	(Shutter)-[:OF_TYPE]->(Thriller)
 
-CREATE (BodyOfLies:Movie {title:'Body Of Lies', released:2008, description:'A CIA agent on the ground in Jordan hunts down a powerful terrorist leader while being caught between the unclear intentions of his American supervisors and Jordan Intelligence.'})
+CREATE (BodyOfLies:Movie {title:'Body Of Lies', released:2008, description:'A CIA agent on the ground in Jordan hunts down a powerful terrorist leader while being caught between the unclear intentions of his American supervisors and Jordan Intelligence.',copies: 5})
 CREATE (Crowe:Actor {name:'Russell Crowe'})
 CREATE (Scott:Director {name:'Ridley Scott'})
 CREATE
