@@ -49,7 +49,8 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("name", customer.name);
             dictionary.Add("surname", customer.surname);
             dictionary.Add("username", customer.username);
-            WebApiConfig.GraphClient.Cypher.Create("(customer:Customer {name: {name}, surname: {surname}, username: {username}})")
+            dictionary.Add("password", customer.password);
+            WebApiConfig.GraphClient.Cypher.Create("(customer:Customer {name: {name}, surname: {surname}, username: {username}, password: {password}})")
                 .WithParams(dictionary).ExecuteWithoutResults();
 
             return RedirectToAction("Index", "Home");

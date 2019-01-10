@@ -155,6 +155,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
@@ -215,8 +216,7 @@
     <Content Include="Views\Customers\NewCustomer.cshtml" />
     <Content Include="Views\Movies\Index.cshtml" />
     <Content Include="Views\Movies\Detail.cshtml" />
-    <Content Include="Views\Customers\EditorTemplates\SelectCustomerEditorViewModel.cshtml" />
-    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Authentication\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
