@@ -15,5 +15,8 @@ namespace NBPDom1i2.Models
         [Display(Name ="Surname")]
         public string surname { get; set; }
 
+        [Display(Name = "Username")]
+        public string username { get; set; }
+
     }
 }
