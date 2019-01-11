@@ -38,7 +38,7 @@ namespace NBPDom1i2.Controllers
 
         public ActionResult NewCustomer()
         {
-            Customer c = new Customer { name = "Chris", surname = "Jones" };
+            Customer c = new Customer { name = "", surname = "" };
             return View(c);
         }
 
@@ -50,10 +50,28 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("surname", customer.surname);
             dictionary.Add("username", customer.username);
             dictionary.Add("password", customer.password);
-            WebApiConfig.GraphClient.Cypher.Create("(customer:Customer {name: {name}, surname: {surname}, username: {username}, password: {password}})")
-                .WithParams(dictionary).ExecuteWithoutResults();
+            dictionary.Add("role", "customer");
+            //WebApiConfig.GraphClient.Cypher.Create("(customer:Customer {name: {name}, surname: {surname}, username: {username}, password: {password}, role: {customer}})")
+            //    .WithParams(dictionary).ExecuteWithoutResults();
+            try
+            {
+                var data = WebApiConfig.GraphClient.Cypher.Create("(c:Customer {name: {name}, surname: {surname}, username: {username}, password: {password}, role: {role}})")
+                    .WithParams(dictionary)
+                    .Return(c => c.As<Customer>())
+                    .Results;
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
+            catch
+            {
+                Session["failedRegister"] = "failed";
+                customer.username = "";
+                //Customer c = new Customer
+                //{ name = "", surname = "", username = "", password = "" };
+                return View("NewCustomer",customer);
+            }
+
+            
         }
 
         [HttpPost]

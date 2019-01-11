@@ -16,13 +16,24 @@
         @Html.Label("surname")
         @Html.TextBoxFor(m => m.surname, new { @class = "form-control" })
     </div>
+    if ((string)Session["failedRegister"] == "failed")
+    {
+        Session["failedRegister"] = "success";
+        <div class="form-group " style="color:orangered">
+            @Html.Label("username")
+            @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
+        </div>
+    }
+    else
+    {
     <div class="form-group">
         @Html.Label("username")
         @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
     </div>
+    }
     <div class="form-group">
         @Html.Label("password")
-        @Html.TextBoxFor(m => m.password, new { @class = "form-control" , @type = "password"})
+        @Html.TextBoxFor(m => m.password, new { @class = "form-control", @type = "password" })
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>

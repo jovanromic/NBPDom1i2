@@ -41,9 +41,12 @@ namespace NBPDom1i2.Controllers
                 return RedirectToAction("Index");
             }
             else
+            {
                 Session["username"] = customers[0].username;
+                Session["role"] = customers[0].role;
 
-            return RedirectToAction("Index", "Movies");
+                return RedirectToAction("Index", "Movies");
+            }
            
         }
     }

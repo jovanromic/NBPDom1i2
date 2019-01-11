@@ -21,5 +21,7 @@ namespace NBPDom1i2.Models
         [Display(Name = "Password")]
         public string password { get; set; }
 
+        public string role { get; set; }
+
     }
 }

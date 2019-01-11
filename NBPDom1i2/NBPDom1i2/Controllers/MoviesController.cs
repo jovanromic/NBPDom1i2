@@ -429,13 +429,37 @@ namespace NBPDom1i2.Controllers
             }
         }
 
-        //[HttpPost]
-        //public ActionResult Rent(MovieDetail moviedetail)
-        //{
-        //    if(moviedetail.movie.copies>0)
-        //    {
+        [HttpPost]
+        public ActionResult Rent(MovieDetail moviedetail)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", moviedetail.movie.title);
+            dictionary.Add("username", (string)Session["username"]);
+            dictionary.Add("copies", moviedetail.movie.copies - 1);
 
-        //    }
-        //}
+            DateTime expdate = DateTime.Now;
+            //expdate.AddMonths(1);
+            dictionary.Add("expiry", expdate.ToString("yyyy-MM-dd"));
+
+            //WebApiConfig.GraphClient.Cypher.Match
+            //    ("(movie:Movie {title: {title}}),(customer:Customer {username: {username}})")
+            //    .WithParams(dictionary)
+            //    .Set("(movie {copies: {copies}})")
+            //    .Create("(customer)-[r:RENTS {expiry: {expiry}}]->(movie)")
+            //    .ExecuteWithoutResults;
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})," +
+                "(customer:Customer {username: {username}})" +
+                "set movie.copies = {copies}" +
+                "create (customer)-[r:RENTS {expiry:{expiry}}]->(movie)" +
+                "return movie",
+                dictionary, CypherResultMode.Set);
+
+            List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<Movie>(query).ToList();
+
+            return Content("Iznajmljeno");
+
+        }
     }
 }

@@ -10,22 +10,22 @@
     @using (Html.BeginForm("Rent", "Movies"))
     {
     <div class="col-sm-5">
-        <h2>@Html.ValueFor(m => m.movie.title)</h2>
+        <h2>@Html.DisplayFor(m => Model.movie.title) @Html.HiddenFor(m=>Model.movie.title)</h2>
         <br />
         <div>
-            Genre: @Html.ValueFor(m => m.genre)
+            Genre: @Html.DisplayFor(m => Model.genre)
         </div>
         <br />
         <div>
-            Description: @Model.movie.description
+            Description: @Html.DisplayFor(m=>Model.movie.description)
         </div>
         <br />
         <div>
-            Release date: @Model.movie.released
+            Release date: @Html.DisplayFor(m=> Model.movie.released)
         </div>
         <br />
         <div>
-            Director: @Model.director
+            Director: @Html.DisplayFor(m=> Model.director)
         </div>
         <br />
         <div class="list-group">
@@ -43,7 +43,8 @@
         </div>
         <br />
         <div>
-            Available copies: @Model.movie.copies
+            Available copies: @Html.DisplayFor(m => Model.movie.copies) 
+            @Html.HiddenFor(m => Model.movie.copies)
         </div>
         <br />
         @if (Model.movie.copies > 0)
