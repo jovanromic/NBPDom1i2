@@ -5,66 +5,130 @@
 }
 
 
-
-<div class="container-fluid">
-    @using (Html.BeginForm("Rent", "Movies"))
-    {
-    <div class="col-sm-5">
-        <h2>@Html.DisplayFor(m => Model.movie.title) @Html.HiddenFor(m=>Model.movie.title)</h2>
-        <br />
-        <div>
-            Genre: @Html.DisplayFor(m => Model.genre)
-        </div>
-        <br />
-        <div>
-            Description: @Html.DisplayFor(m=>Model.movie.description)
-        </div>
-        <br />
-        <div>
-            Release date: @Html.DisplayFor(m=> Model.movie.released)
-        </div>
-        <br />
-        <div>
-            Director: @Html.DisplayFor(m=> Model.director)
-        </div>
-        <br />
-        <div class="list-group">
-            Cast:
-            <br />
-            <ul class="list-group">
-                @foreach (string s in Model.actors)
-                {
-                    <li style="margin-left: 30px">
-                        @s
-                    </li>
-                }
-            </ul>
-
-        </div>
-        <br />
-        <div>
-            Available copies: @Html.DisplayFor(m => Model.movie.copies) 
-            @Html.HiddenFor(m => Model.movie.copies)
-        </div>
-        <br />
-        @if (Session["username"] != null)
+@if ((string)Session["role"] == "admin")
+{
+    <div class="container-fluid">
+        @using (Html.BeginForm("AdminEdit", "Movies"))
         {
-
-
-            if (Model.movie.copies > 0)
-            {
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Rent</button>
+            <div class="col-sm-5">
+                <h2>@Html.TextBoxFor(m => Model.movie.title)</h2>
+                <br />
+                <div>
+                    Genre: @Html.TextBoxFor(m => Model.genre)
                 </div>
-            }
-            else
-            {
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" disabled>Rent</button>
+                <br />
+                <div>
+                    Description: @Html.TextBoxFor(m => Model.movie.description)
+                </div>
+                <br />
+                <div>
+                    Release date: @Html.TextBoxFor(m => Model.movie.released)
+                </div>
+                <br />
+                <div>
+                    Director: @Html.TextBoxFor(m => Model.director)
+                </div>
+                <br />
+                <div class="list-group">
+                    Cast:
+                    <br />
+                    <ul class="list-group">
+                        @for(int i=0;i<Model.actors.Count;i++)
+                        {
+                            <li>@Html.TextBoxFor(m=>Model.actors[i])</li>
+                        }
+                    </ul>
+
+                </div>
+                <br />
+                <div>
+                    Available copies: @Html.TextBoxFor(m => Model.movie.copies)
+                </div>
+                <br />
+                @if (Session["username"] != null)
+                {
+
+
+                    if (Model.movie.copies > 0)
+                    {
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" disabled>Rent</button>
+                        </div>
+                    }
+                }
             </div>
-            }
         }
     </div>
-    }
-</div>
+}
+
+else
+{
+    <div class="container-fluid">
+        @using (Html.BeginForm("Rent", "Movies"))
+        {
+            <div class="col-sm-5">
+                <h2>@Html.DisplayFor(m => Model.movie.title) @Html.HiddenFor(m => Model.movie.title)</h2>
+                <br />
+                <div>
+                    Genre: @Html.DisplayFor(m => Model.genre)
+                </div>
+                <br />
+                <div>
+                    Description: @Html.DisplayFor(m => Model.movie.description)
+                </div>
+                <br />
+                <div>
+                    Release date: @Html.DisplayFor(m => Model.movie.released)
+                </div>
+                <br />
+                <div>
+                    Director: @Html.DisplayFor(m => Model.director)
+                </div>
+                <br />
+                <div class="list-group">
+                    Cast:
+                    <br />
+                    <ul class="list-group">
+                        @foreach (string s in Model.actors)
+                        {
+                            <li style="margin-left: 30px">
+                                @s
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+                <br />
+                <div>
+                    Available copies: @Html.DisplayFor(m => Model.movie.copies)
+                    @Html.HiddenFor(m => Model.movie.copies)
+                </div>
+                <br />
+                @if ((string)Session["role"] =="customer")
+                {
+
+
+                    if (Model.movie.copies > 0)
+                    {
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Rent</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" disabled>Rent</button>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+}
 

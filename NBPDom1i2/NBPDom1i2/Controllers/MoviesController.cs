@@ -461,5 +461,30 @@ namespace NBPDom1i2.Controllers
             return Content("Iznajmljeno");
 
         }
+
+        [HttpPost]
+        public ActionResult AdminEdit(MovieDetail moviedetail)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", moviedetail.movie.title);
+            dictionary.Add("released", moviedetail.movie.released);
+            dictionary.Add("copies", moviedetail.movie.copies);
+            dictionary.Add("description", moviedetail.movie.description);
+            dictionary.Add("director", moviedetail.director);
+
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})" +
+                "set movie.copies = {copies}, movie.title = {title}, movie.description = {description}, movie.released = {released}" +
+                "return movie",
+                dictionary, CypherResultMode.Set);
+
+            List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<Movie>(query).ToList();
+
+            moviedetail.movie = movies[0];
+
+
+            return View("Detail",moviedetail);
+        }
     }
 }
