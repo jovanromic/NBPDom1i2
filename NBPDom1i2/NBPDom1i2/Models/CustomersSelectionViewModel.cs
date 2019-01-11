@@ -5,7 +5,7 @@ using System.Web;
 using NBPDom1i2.Models;
 using NBPDom1i2.ViewModels;
 
-namespace NBPDom1i2.ViewModels
+namespace NBPDom1i2.Models
 {
     public class CustomersSelectionViewModel
     {

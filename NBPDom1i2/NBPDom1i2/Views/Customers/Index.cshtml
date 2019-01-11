@@ -1,4 +1,4 @@
-﻿@model NBPDom1i2.ViewModels.CustomersSelectionViewModel
+﻿@model NBPDom1i2.Models.CustomersSelectionViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,12 +12,25 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Username</th>
+                            <th>Select</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @Html.EditorFor(m => Model.customers)
+                        @for (int i = 0; i < Model.customers.Count; i++)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(m => Model.customers[i].name)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.CheckBoxFor(m => Model.customers[i].selected)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(model => Model.customers[i].username)
+                            </td>
+                        </tr>
+                        }
                     </tbody>
                 </table>
                 <div class="form-group">
