@@ -11,5 +11,6 @@ namespace NBPDom1i2.Models
         public string title { get; set; }
         public int released { get; set; }
         public string description { get; set; }
+        public int copies { get; set; }
     }
 }

@@ -1,0 +1,12 @@
+﻿@model NBPDom1i2.Models.SelectCustomerEditorViewModel
+<tr>
+    <td>
+        @Html.DisplayFor(m=>Model.name)
+    </td>
+    <td  style="text-align:center">
+        @Html.CheckBoxFor(m => Model.selected)
+    </td>
+    <td>
+        @Html.HiddenFor(model => Model.username)
+    </td>
+</tr>

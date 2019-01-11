@@ -1,0 +1,27 @@
+﻿@model NBPDom1i2.Models.Customer
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h2>Log in</h2>
+
+    <br />
+    <br />
+    @using (Html.BeginForm("LogIn", "Authentication", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            @Html.Label("username")
+            @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.Label("password")
+            @Html.TextBoxFor(m => m.password, new { @class = "form-control" , @type="password"})
+        </div>
+
+        <button type="submit" class="btn btn-primary">Log in</button>
+    }
+</div>
+
