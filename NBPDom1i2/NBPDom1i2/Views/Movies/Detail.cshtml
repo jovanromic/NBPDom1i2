@@ -47,17 +47,22 @@
             @Html.HiddenFor(m => Model.movie.copies)
         </div>
         <br />
-        @if (Model.movie.copies > 0)
+        @if (Session["username"] != null)
         {
+
+
+            if (Model.movie.copies > 0)
+            {
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Rent</button>
+                </div>
+            }
+            else
+            {
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Rent</button>
+                <button type="submit" class="btn btn-primary" disabled>Rent</button>
             </div>
-        }
-        else
-        {
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary" disabled>Rent</button>
-        </div>
+            }
         }
     </div>
     }
