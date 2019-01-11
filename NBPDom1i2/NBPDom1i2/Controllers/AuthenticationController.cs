@@ -49,5 +49,12 @@ namespace NBPDom1i2.Controllers
             }
            
         }
+
+        public ActionResult LogOut()
+        {
+            Session["username"] = null;
+            Session["role"] = null;
+            return RedirectToAction("Index", "Movies");
+        }
     }
 }
