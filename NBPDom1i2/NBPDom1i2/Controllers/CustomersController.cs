@@ -91,5 +91,39 @@ namespace NBPDom1i2.Controllers
             }
             return RedirectToAction("Index", "Customers");
         }
+
+        public ActionResult MyRents()
+        {
+            if(Session["username"]!=null)
+            {
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                dictionary.Add("username", Session["username"]);
+                RentDate rd = new RentDate();
+
+
+                var data = WebApiConfig.GraphClient.Cypher
+                    .Match("(m:Movie)<-[r:RENTS]-(:Customer {username:{username}})")
+                    .WithParams(dictionary)
+                    .Return((m, r) => new
+                    {
+                        Movie = m.As<Movie>(),
+                        Rentdate = r.As<RentDate>()
+                    });
+
+                var results = data.Results.ToList();
+
+               MovieRent movierents = new MovieRent();
+
+                foreach (var result in results)
+                {
+                    movierents.movietitles.Add(result.Movie.title);
+                    movierents.movierentdates.Add(result.Rentdate.expiry);
+                }
+
+                return View(movierents);
+            }
+            else
+                return RedirectToAction("LogIn", "Authentication");
+        }
     }
 }
