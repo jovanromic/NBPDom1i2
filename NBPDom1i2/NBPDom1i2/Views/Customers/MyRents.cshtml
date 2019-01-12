@@ -1,4 +1,4 @@
-﻿@model NBPDom1i2.ViewModels.MovieRent
+﻿@model List<NBPDom1i2.Models.MyRentMovie>
 @{
     ViewBag.Title = "MyRents";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,29 +19,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < Model.movietitles.Count; i++)
+                    @for (int i = 0; i < Model.Count; i++)
                     {
-
-
                     <tr>
-                        
                         <td>
-                            @Model.movietitles[i]
-                            @Html.HiddenFor(m => Model.movietitles[i])
+                            @Model[i].rentedtitle
                         </td>
                         <td>
-                            @Model.movierentedondates[i]
-                            @Html.HiddenFor(m => Model.movierentedondates[i])
+                            @Model[i].rentedon
                         </td>
-                        <td>@Model.movieexpirydates[i]</td>
-                        <td>@Model.moviereturnedondates[i]</td>
-                        @if (Model.moviereturnedondates[i] == "")
+                        <td>@Model[i].expiry</td>
+                        <td>@Model[i].returnedon</td>
+                        @if (Model[i].returnedon == "")
                         {
                         <td>
                             @using (Html.BeginForm("ReturnMovie", "Movies"))
                             {
-                                <input type="hidden" value="@Model.movierentedondates[i]" name="movierentedondates[@i]" />
-                                <input type="hidden" value="@Model.movietitles[i]" name="movietitles[@i]" />
+                                <input type="hidden" value="@Model[i].rentedon" name="RentedOn" />
+                                <input type="hidden" value="@Model[i].rentedtitle" name="RentedTitle" />
                                 <input type="submit" />
                             }
                         </td>

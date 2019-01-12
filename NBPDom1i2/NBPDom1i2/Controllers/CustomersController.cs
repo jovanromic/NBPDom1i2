@@ -98,7 +98,7 @@ namespace NBPDom1i2.Controllers
             {
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                 dictionary.Add("username", Session["username"]);
-                RentDate rd = new RentDate();
+                MyRentMovie rd = new MyRentMovie();
 
 
                 var data = WebApiConfig.GraphClient.Cypher
@@ -107,22 +107,26 @@ namespace NBPDom1i2.Controllers
                     .Return((m, r) => new
                     {
                         Movie = m.As<Movie>(),
-                        Rentdate = r.As<RentDate>()
+                        Rentdate = r.As<MyRentMovie>()
                     });
 
                 var results = data.Results.ToList();
 
-               MovieRent movierents = new MovieRent();
+                //MovieRent movierents = new MovieRent();
+
+                List<MyRentMovie> mrmovies = new List<MyRentMovie>();
 
                 foreach (var result in results)
                 {
-                    movierents.movietitles.Add(result.Movie.title);
+                    result.Rentdate.rentedtitle = result.Movie.title;
+                    mrmovies.Add(result.Rentdate);
+                    /*movierents.movietitles.Add(result.Movie.title);
                     movierents.movierentedondates.Add(result.Rentdate.rentedon);
                     movierents.movieexpirydates.Add(result.Rentdate.expiry);
-                    movierents.moviereturnedondates.Add(result.Rentdate.returnedon);
+                    movierents.moviereturnedondates.Add(result.Rentdate.returnedon);*/
                 }
 
-                return View(movierents);
+                return View(mrmovies);
             }
             else
                 return RedirectToAction("LogIn", "Authentication");

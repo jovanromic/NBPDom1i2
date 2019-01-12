@@ -464,11 +464,11 @@ namespace NBPDom1i2.Controllers
         }
 
         [HttpPost]
-        public ActionResult ReturnMovie(MovieRent movierent)
+        public ActionResult ReturnMovie(string RentedOn, string RentedTitle)
         {
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
-            dictionary.Add("title", movierent.movietitles[0]);
-            dictionary.Add("rentedon", movierent.movierentedondates[0]);
+            dictionary.Add("title", RentedTitle);
+            dictionary.Add("rentedon", RentedOn);
             dictionary.Add("returnedon", DateTime.Now.ToString("yyyy-MM-dd"));
             dictionary.Add("username", (string)Session["username"]);
 
