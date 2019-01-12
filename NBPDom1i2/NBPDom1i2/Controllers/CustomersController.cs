@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Neo4jClient;
+using Neo4jClient.Cypher;
 
 namespace NBPDom1i2.Controllers
 {
@@ -20,7 +22,9 @@ namespace NBPDom1i2.Controllers
                 .Return(c => c.As<Customer>())
                 .Results.ToList();
 
-            var model = new CustomersSelectionViewModel();
+            //var model = new CustomersSelectionViewModel();
+
+            List<SelectCustomerEditorViewModel> model = new List<SelectCustomerEditorViewModel>();
 
             foreach (var customer in data)
             {
@@ -30,7 +34,7 @@ namespace NBPDom1i2.Controllers
                     username = customer.username,
                     selected = false
                 };
-                model.customers.Add(editorViewModel);
+                model.Add(editorViewModel);
             }
 
             return View(model);
@@ -75,20 +79,23 @@ namespace NBPDom1i2.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteCustomer(CustomersSelectionViewModel customers)
+        public ActionResult DeleteCustomer(string Username)
         {
             /*Dictionary<string, object> dictionary = new Dictionary<string, object>();
             dictionary*/
-            var selectedUsernames = customers.getSelectedUsernames(); //ovde imam sve usernamee za brisanje
-            foreach (var su in selectedUsernames)
-            {
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary.Add("username", su);
-                WebApiConfig.GraphClient.Cypher.Delete("(customer:Customer {username: {username}})")
-                .WithParams(dictionary).ExecuteWithoutResults();
+                dictionary.Add("username", Username);
+                /*WebApiConfig.GraphClient.Cypher.Delete("(customer:Customer {username: {username}})")
+                .WithParams(dictionary).ExecuteWithoutResults();*/
 
-                //return RedirectToAction("Index", "Customers");
-            }
+            var query = new Neo4jClient.Cypher.CypherQuery(
+               "match (customer:Customer {username: {username}}) detach delete customer"
+               , dictionary, Neo4jClient.Cypher.CypherResultMode.Set);
+
+            ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteCypher(query);
+
+            //return RedirectToAction("Index", "Customers");
             return RedirectToAction("Index", "Customers");
         }
 

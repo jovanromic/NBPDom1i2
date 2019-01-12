@@ -170,7 +170,6 @@
     <Compile Include="Models\MyRentMovie.cs" />
     <Compile Include="Models\SelectCustomerEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\CustomersSelectionViewModel.cs" />
     <Compile Include="ViewModels\MovieDetail.cs" />
     <Compile Include="ViewModels\MovieGenre.cs" />
     <Compile Include="ViewModels\RandomMovieViewModel.cs" />

@@ -1,4 +1,4 @@
-﻿@model NBPDom1i2.Models.CustomersSelectionViewModel
+﻿@model List<NBPDom1i2.Models.SelectCustomerEditorViewModel>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,30 +12,31 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Select</th>
+                            <th>Username</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.customers.Count; i++)
+                        @for (int i = 0; i < Model.Count; i++)
                         {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(m => Model.customers[i].name)
-                            </td>
-                            <td style="text-align:center">
-                                @Html.CheckBoxFor(m => Model.customers[i].selected)
-                            </td>
-                            <td>
-                                @Html.HiddenFor(model => Model.customers[i].username)
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    @Model[i].name
+                                </td>
+                                <td>
+                                    @Model[i].username
+                                </td>
+                                    <td>
+                                        @using (Html.BeginForm("DeleteCustomer", "Customers"))
+                                        {
+                                            <input type="hidden" value="@Model[i].username" name="Username" />
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        }
+                                    </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Delete</button>
-                </div>
             </div>
         </div>
     </div>
