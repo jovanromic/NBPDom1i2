@@ -3,8 +3,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using (Html.BeginForm("DeleteCustomer", "Customers"))
-{   <div class="container-fluid">
+
+@if ((string)Session["role"] == "admin")
+{
+    using (Html.BeginForm("DeleteCustomer", "Customers"))
+    {   <div class="container-fluid">
         <h2>Customers</h2>
         <div class="row">
             <div class="col-sm-8">
@@ -19,6 +22,8 @@
                     <tbody>
                         @for (int i = 0; i < Model.Count; i++)
                         {
+                            if (Model[i].username != "admin")
+                            {
                             <tr>
                                 <td>
                                     @Model[i].name
@@ -34,10 +39,12 @@
                                         }
                                     </td>
                             </tr>
+                            }
                         }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    }
 }

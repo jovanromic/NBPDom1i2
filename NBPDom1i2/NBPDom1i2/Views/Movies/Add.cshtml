@@ -1,0 +1,62 @@
+﻿@model NBPDom1i2.ViewModels.MovieDetail
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New movie</h2>
+@if((string)Session["AddFail"]=="failed")
+{
+    <h3 style="color:orangered">All fields are required</h3>
+    Session["AddFail"] = "success";
+}
+@if ((string)Session["role"] == "admin")
+{
+    <div class="container-fluid">
+        @using (Html.BeginForm("AddMovie", "Movies"))
+        {
+            <div class="col-sm-8">
+                <div class="form-group row">
+                    Title: @Html.TextBoxFor(m => Model.movie.title, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group row">
+                    Genre: @Html.TextBoxFor(m => Model.genre, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group row">
+                    Description: @Html.TextBoxFor(m => Model.movie.description, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group row">
+                    Release date: @Html.TextBoxFor(m => Model.movie.released, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group row">
+                    Director: @Html.TextBoxFor(m => Model.director, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="list-group">
+                    Cast:
+                    <br />
+                    <ul class="list-group" style="margin-left:30px">
+                        @for (int i = 0; i < Model.actors.Count; i++)
+                        {
+                            <li>@Html.TextBoxFor(m => Model.actors[i], new { @class = "form-control" })</li>
+                        }
+                    </ul>
+
+                </div>
+                <br />
+                <div class="form-group row">
+                    Available copies: @Html.TextBoxFor(m => Model.movie.copies, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-primary">Add new movie</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+

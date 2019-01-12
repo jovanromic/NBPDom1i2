@@ -26,10 +26,10 @@
                     {
                         <li>@Html.ActionLink("Customers", "Index", "Customers")</li>
                     }
-                    @*else if((string)Session["role"]=="customer")
+                    else if((string)Session["role"]=="customer")
                     {
-                        <li>@Html.ActionLink("My rents","","Customers")</li>
-                    }*@
+                        <li>@Html.ActionLink("My rents","MyRents","Customers")</li>
+                    }
                 </ul>
                 @if (Session["role"] == null)
                 {
