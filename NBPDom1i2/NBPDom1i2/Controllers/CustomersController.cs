@@ -117,7 +117,9 @@ namespace NBPDom1i2.Controllers
                 foreach (var result in results)
                 {
                     movierents.movietitles.Add(result.Movie.title);
-                    movierents.movierentdates.Add(result.Rentdate.expiry);
+                    movierents.movierentedondates.Add(result.Rentdate.rentedon);
+                    movierents.movieexpirydates.Add(result.Rentdate.expiry);
+                    movierents.moviereturnedondates.Add(result.Rentdate.returnedon);
                 }
 
                 return View(movierents);

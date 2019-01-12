@@ -7,6 +7,8 @@ namespace NBPDom1i2.Models
 {
     public class RentDate
     {
+        public string rentedon { get; set; }
         public string expiry { get; set; }
+        public string returnedon { get; set; }
     }
 }

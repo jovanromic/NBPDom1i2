@@ -11,17 +11,44 @@
             <table id="movies" class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Rented on</th>
                         <th>Title</th>
+                        <th>Rented on</th>
+                        <th>Expires on</th>
+                        <th>Returned on</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for(int i = 0; i<Model.movietitles.Count;i++)
+                    @for (int i = 0; i < Model.movietitles.Count; i++)
                     {
-                        <tr>
-                            <td>@Model.movierentdates[i]</td>
-                            <td>@Model.movietitles[i]</td>
-                        </tr>
+
+
+                    <tr>
+                        
+                        <td>
+                            @Model.movietitles[i]
+                            @Html.HiddenFor(m => Model.movietitles[i])
+                        </td>
+                        <td>
+                            @Model.movierentedondates[i]
+                            @Html.HiddenFor(m => Model.movierentedondates[i])
+                        </td>
+                        <td>@Model.movieexpirydates[i]</td>
+                        <td>@Model.moviereturnedondates[i]</td>
+                        @if (Model.moviereturnedondates[i] == "")
+                        {
+                        <td>
+                            @using (Html.BeginForm("ReturnMovie", "Movies"))
+                            {
+                                <input type="hidden" value="@Model.movierentedondates[i]" name="movierentedondates[@i]" />
+                                <input type="hidden" value="@Model.movietitles[i]" name="movietitles[@i]" />
+                                <input type="submit" />
+                            }
+                        </td>
+                        }
+
+                    </tr>
+                        
                     }
                 </tbody>
             </table>

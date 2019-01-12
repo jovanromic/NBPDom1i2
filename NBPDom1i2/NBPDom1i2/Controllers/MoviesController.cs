@@ -438,9 +438,10 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("copies", moviedetail.movie.copies - 1);
 
             DateTime expdate = DateTime.Now;
-            //expdate.AddMonths(1);
+            dictionary.Add("rentedon", expdate.ToString("yyyy-MM-dd"));
+            expdate = expdate.AddDays(15);
             dictionary.Add("expiry", expdate.ToString("yyyy-MM-dd"));
-
+            dictionary.Add("returnedon", "");
             //WebApiConfig.GraphClient.Cypher.Match
             //    ("(movie:Movie {title: {title}}),(customer:Customer {username: {username}})")
             //    .WithParams(dictionary)
@@ -451,7 +452,7 @@ namespace NBPDom1i2.Controllers
             var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})," +
                 "(customer:Customer {username: {username}})" +
                 "set movie.copies = {copies}" +
-                "create (customer)-[r:RENTS {expiry:{expiry}}]->(movie)" +
+                "create (customer)-[r:RENTS {rentedon:{rentedon},expiry:{expiry},returnedon:{returnedon}}]->(movie)" +
                 "return movie",
                 dictionary, CypherResultMode.Set);
 
@@ -460,6 +461,26 @@ namespace NBPDom1i2.Controllers
 
             return Content("Iznajmljeno");
 
+        }
+
+        [HttpPost]
+        public ActionResult ReturnMovie(MovieRent movierent)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", movierent.movietitles[0]);
+            dictionary.Add("rentedon", movierent.movierentedondates[0]);
+            dictionary.Add("returnedon", DateTime.Now.ToString("yyyy-MM-dd"));
+            dictionary.Add("username", (string)Session["username"]);
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})-[r:RENTS {rentedon:{rentedon}}]-(customer:Customer {username: {username}})" +
+                "set movie.copies = movie.copies+1, r.returnedon = {returnedon}" +
+                "return movie",
+                dictionary, CypherResultMode.Set);
+
+            List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<Movie>(query).ToList();
+
+            return RedirectToAction("MyRents", "Customers");
         }
 
         [HttpPost]
