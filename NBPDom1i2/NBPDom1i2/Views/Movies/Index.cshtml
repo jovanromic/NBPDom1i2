@@ -7,7 +7,18 @@
 
 
 <div class="container-fluid">
-    <h2>Movies</h2>
+    <h2>
+        Movies
+    </h2>
+    <br />
+    @if ((string)Session["role"] == "admin")
+    {
+        using (Html.BeginForm("Add", "Movies"))
+        {
+            <button type="submit" class="btn btn-primary">Add movie</button>
+        }
+    }
+    <br />
     <div class="row">
         <div class="col-sm-8">
             <table id="movies" class="table table-bordered table-hover">
@@ -18,22 +29,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ( NBPDom1i2.ViewModels.MovieGenre d in Model.moviegenre)
+                    @foreach (NBPDom1i2.ViewModels.MovieGenre d in Model.moviegenre)
                     {
-                    <tr>
-                        <td><a href="http://localhost:51894/Movie/@d.movietitle">@d.movietitle</a></td>
-                        <td>@d.moviegenre</td>
-                    </tr>
+                        <tr>
+                            <td><a href="http://localhost:51894/Movie/@d.movietitle">@d.movietitle</a></td>
+                            <td>@d.moviegenre</td>
+                            @if ((string)Session["role"] == "admin")
+                            {
+
+
+                                <td>
+                                    @using (Html.BeginForm("DeleteMovie", "Movies"))
+                                    {
+                                        <input type="hidden" value="@d.movietitle" name="Title" />
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    }
+                                </td>
+                            }
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
         @using (Html.BeginForm("GetMovies", "Movies"))
-        { <div class="col-sm-4">
-              <div class="form-group">
-                  @Html.Label("Search")
-                  @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
-              </div>
+        {<div class="col-sm-4">
+                <div class="form-group">
+                    @Html.Label("Search")
+                    @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
+                </div>
                 <div class="dropdown">
                     @Html.Label("genres")
                     @Html.DropDownListFor(m => m.genres, new SelectList(Model.genres), new { @class = "form-control" })

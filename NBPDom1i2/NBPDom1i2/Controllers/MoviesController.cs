@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -7,6 +8,7 @@ using NBPDom1i2.Models;
 using NBPDom1i2.ViewModels;
 using Neo4jClient;
 using Neo4jClient.Cypher;
+using ServiceStack.Redis;
 
 namespace NBPDom1i2.Controllers
 {
@@ -155,17 +157,24 @@ namespace NBPDom1i2.Controllers
         [Route("movie/{title}")]
         public ActionResult MovieDetails(string title)
         {
-            MovieDetail moviedetail = new MovieDetail();
-            //moviedetail.movie = new Movie { title = "Avatar",
-            //    description = "Plavi veliki ljudi protiv beli mali ljudi. Biju se.",
-            //    released = 2009, copies = 5 };
-            //moviedetail.genre = "Thriller";
-            //moviedetail.actors = new List<string> { "Actor 1", "Actor 2", "Actor 3" };
 
+            //
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+            //
+
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                redisClient.SetValue("covek", "pera");
+            }
+
+
+            MovieDetail moviedetail = new MovieDetail();
+            
             var data = WebApiConfig.GraphClient.Cypher.Match
                 ("(movie:Movie {title: {title}})-[OF_TYPE]-(genre:Genre)," +
-                //
-"(movie)-[ACTED_IN]-(actor:Actor)," +
+                "(movie)-[ACTED_IN]-(actor:Actor)," +
                 "(movie)-[DIRECTED]-(director:Director)")
                 .WithParam("title", title)
                 .Return(() => new MovieDetail
@@ -438,9 +447,10 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("copies", moviedetail.movie.copies - 1);
 
             DateTime expdate = DateTime.Now;
-            //expdate.AddMonths(1);
+            dictionary.Add("rentedon", expdate.ToString("yyyy-MM-dd"));
+            expdate = expdate.AddDays(15);
             dictionary.Add("expiry", expdate.ToString("yyyy-MM-dd"));
-
+            dictionary.Add("returnedon", "");
             //WebApiConfig.GraphClient.Cypher.Match
             //    ("(movie:Movie {title: {title}}),(customer:Customer {username: {username}})")
             //    .WithParams(dictionary)
@@ -448,18 +458,156 @@ namespace NBPDom1i2.Controllers
             //    .Create("(customer)-[r:RENTS {expiry: {expiry}}]->(movie)")
             //    .ExecuteWithoutResults;
 
+            var q = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})-[r:RENTS]-(customer:Customer {username:{username}})" +
+                "return r.returnedon", dictionary, CypherResultMode.Set);
+
+            List<string> dates = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<string>(q).ToList();
+
+            if (dates.Count != 0)
+                if (dates.First() == "")
+                {
+                    Session["Rented"] = "yes";
+                    return MovieDetails(moviedetail.movie.title);
+                }
+
             var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})," +
                 "(customer:Customer {username: {username}})" +
                 "set movie.copies = {copies}" +
-                "create (customer)-[r:RENTS {expiry:{expiry}}]->(movie)" +
+                "create (customer)-[r:RENTS {rentedon:{rentedon},expiry:{expiry},returnedon:{returnedon}}]->(movie)" +
                 "return movie",
                 dictionary, CypherResultMode.Set);
 
             List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
                 .ExecuteGetCypherResults<Movie>(query).ToList();
 
-            return Content("Iznajmljeno");
 
+
+            return RedirectToAction("MyRents", "Customers");
+        }
+
+        [HttpPost]
+        public ActionResult ReturnMovie(string RentedOn, string RentedTitle)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", RentedTitle);
+            dictionary.Add("rentedon", RentedOn);
+            dictionary.Add("returnedon", DateTime.Now.ToString("yyyy-MM-dd"));
+            dictionary.Add("username", (string)Session["username"]);
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})-[r:RENTS {rentedon:{rentedon}}]-(customer:Customer {username: {username}})" +
+                "set movie.copies = movie.copies+1, r.returnedon = {returnedon}" +
+                "return movie",
+                dictionary, CypherResultMode.Set);
+
+            List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<Movie>(query).ToList();
+
+            return RedirectToAction("MyRents", "Customers");
+        }
+
+        [HttpPost]
+        public ActionResult AdminEdit(MovieDetail moviedetail)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", moviedetail.movie.title);
+            //dictionary.Add("released", moviedetail.movie.released);
+            dictionary.Add("copies", moviedetail.movie.copies);
+            //dictionary.Add("description", moviedetail.movie.description);
+            //dictionary.Add("director", moviedetail.director);
+
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})" +
+                "set movie.copies = {copies}"+
+                "return movie",
+                dictionary, CypherResultMode.Set);
+
+            List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteGetCypherResults<Movie>(query).ToList();
+
+            moviedetail.movie = movies[0];
+
+
+            return MovieDetails(moviedetail.movie.title);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteMovie(string Title)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", Title);
+
+            var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})" +
+                "detach delete movie",
+                dictionary, CypherResultMode.Set);
+
+            ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteCypher(query);
+
+            return RedirectToAction("Index", "Movies");
+        }
+
+        public ActionResult Add()
+        {
+            MovieDetail moviedetail = new MovieDetail();
+            moviedetail.movie = new Movie { title = "", released = 0, description ="",copies=0};
+            moviedetail.genre = "";
+            moviedetail.director = "";
+            moviedetail.actors = new List<string>(3);
+            moviedetail.actors.Add("");
+            moviedetail.actors.Add("");
+            moviedetail.actors.Add("");
+
+            return View("Add", moviedetail);
+        }
+
+        [HttpPost]
+        public ActionResult AddMovie(MovieDetail moviedetail)
+        {
+            if(moviedetail.movie.title==null || moviedetail.director==null || 
+                moviedetail.genre==null)
+            {
+                Session["AddFail"] = "failed";
+                return RedirectToAction("Add", "Movies");
+            }
+
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            dictionary.Add("title", moviedetail.movie.title);
+            dictionary.Add("released", moviedetail.movie.released);
+            dictionary.Add("copies", moviedetail.movie.copies);
+            dictionary.Add("description", moviedetail.movie.description);
+            dictionary.Add("director", moviedetail.director);
+            dictionary.Add("genre", moviedetail.genre);
+            dictionary.Add("actor", "");
+
+            var query = new Neo4jClient.Cypher.CypherQuery("create (movie:Movie {title:{title}" +
+                ",description: {description}, copies:{copies}, released: {released}})" +
+                "merge (genre:Genre {name:{genre}})" +
+                "merge (director:Director{name:{director}})" +
+                "create (director)-[x:DIRECTED]->(movie)-[r:OF_TYPE]->(genre)"
+                ,
+                dictionary, CypherResultMode.Set);
+
+            ((IRawGraphClient)WebApiConfig.GraphClient)
+                .ExecuteCypher(query);
+
+            for(int i=0;i<3;i++)
+            {
+                if(moviedetail.actors[i]!="")
+                {
+                    dictionary["actor"] = moviedetail.actors[i];
+
+                    var quer = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})" +
+                "merge (actor:Actor {name:{actor}})" +
+                "create (actor)-[r:ACTED_IN]->(movie)",
+                dictionary, CypherResultMode.Set);
+
+                    ((IRawGraphClient)WebApiConfig.GraphClient)
+                        .ExecuteCypher(quer);
+                }
+            }
+
+            return RedirectToAction("Index", "Movies");
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Neo4jClient;
+using Neo4jClient.Cypher;
 
 namespace NBPDom1i2.Controllers
 {
@@ -20,7 +22,9 @@ namespace NBPDom1i2.Controllers
                 .Return(c => c.As<Customer>())
                 .Results.ToList();
 
-            var model = new CustomersSelectionViewModel();
+            //var model = new CustomersSelectionViewModel();
+
+            List<SelectCustomerEditorViewModel> model = new List<SelectCustomerEditorViewModel>();
 
             foreach (var customer in data)
             {
@@ -30,7 +34,7 @@ namespace NBPDom1i2.Controllers
                     username = customer.username,
                     selected = false
                 };
-                model.customers.Add(editorViewModel);
+                model.Add(editorViewModel);
             }
 
             return View(model);
@@ -75,21 +79,64 @@ namespace NBPDom1i2.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteCustomer(CustomersSelectionViewModel customers)
+        public ActionResult DeleteCustomer(string Username)
         {
             /*Dictionary<string, object> dictionary = new Dictionary<string, object>();
             dictionary*/
-            var selectedUsernames = customers.getSelectedUsernames(); //ovde imam sve usernamee za brisanje
-            foreach (var su in selectedUsernames)
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                dictionary.Add("username", Username);
+                /*WebApiConfig.GraphClient.Cypher.Delete("(customer:Customer {username: {username}})")
+                .WithParams(dictionary).ExecuteWithoutResults();*/
+
+            var query = new Neo4jClient.Cypher.CypherQuery(
+               "match (customer:Customer {username: {username}}) detach delete customer"
+               , dictionary, Neo4jClient.Cypher.CypherResultMode.Set);
+
+            ((IRawGraphClient)WebApiConfig.GraphClient)
+                    .ExecuteCypher(query);
+
+            //return RedirectToAction("Index", "Customers");
+            return RedirectToAction("Index", "Customers");
+        }
+
+        public ActionResult MyRents()
+        {
+            if(Session["username"]!=null)
             {
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                dictionary.Add("username", su);
-                WebApiConfig.GraphClient.Cypher.Delete("(customer:Customer {username: {username}})")
-                .WithParams(dictionary).ExecuteWithoutResults();
+                dictionary.Add("username", Session["username"]);
+                MyRentMovie rd = new MyRentMovie();
 
-                //return RedirectToAction("Index", "Customers");
+
+                var data = WebApiConfig.GraphClient.Cypher
+                    .Match("(m:Movie)<-[r:RENTS]-(:Customer {username:{username}})")
+                    .WithParams(dictionary)
+                    .Return((m, r) => new
+                    {
+                        Movie = m.As<Movie>(),
+                        Rentdate = r.As<MyRentMovie>()
+                    });
+
+                var results = data.Results.ToList();
+
+                //MovieRent movierents = new MovieRent();
+
+                List<MyRentMovie> mrmovies = new List<MyRentMovie>();
+
+                foreach (var result in results)
+                {
+                    result.Rentdate.rentedtitle = result.Movie.title;
+                    mrmovies.Add(result.Rentdate);
+                    /*movierents.movietitles.Add(result.Movie.title);
+                    movierents.movierentedondates.Add(result.Rentdate.rentedon);
+                    movierents.movieexpirydates.Add(result.Rentdate.expiry);
+                    movierents.moviereturnedondates.Add(result.Rentdate.returnedon);*/
+                }
+
+                return View(mrmovies);
             }
-            return RedirectToAction("Index", "Customers");
+            else
+                return RedirectToAction("LogIn", "Authentication");
         }
     }
 }
