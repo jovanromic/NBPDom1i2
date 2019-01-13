@@ -57,3 +57,7 @@ CREATE
 	(BodyOfLies)-[:OF_TYPE]->(Thriller)
 
 CREATE CONSTRAINT ON (c:Customer) ASSERT c.username IS UNIQUE
+
+create (admin:Customer{name:'Admin', surname:'Admin', username:'admin', password:'admin', role:'admin'})
+
+

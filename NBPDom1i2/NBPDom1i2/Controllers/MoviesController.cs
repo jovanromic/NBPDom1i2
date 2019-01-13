@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -7,6 +8,7 @@ using NBPDom1i2.Models;
 using NBPDom1i2.ViewModels;
 using Neo4jClient;
 using Neo4jClient.Cypher;
+using ServiceStack.Redis;
 
 namespace NBPDom1i2.Controllers
 {
@@ -155,17 +157,24 @@ namespace NBPDom1i2.Controllers
         [Route("movie/{title}")]
         public ActionResult MovieDetails(string title)
         {
-            MovieDetail moviedetail = new MovieDetail();
-            //moviedetail.movie = new Movie { title = "Avatar",
-            //    description = "Plavi veliki ljudi protiv beli mali ljudi. Biju se.",
-            //    released = 2009, copies = 5 };
-            //moviedetail.genre = "Thriller";
-            //moviedetail.actors = new List<string> { "Actor 1", "Actor 2", "Actor 3" };
 
+            //
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+            //
+
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                redisClient.SetValue("covek", "pera");
+            }
+
+
+            MovieDetail moviedetail = new MovieDetail();
+            
             var data = WebApiConfig.GraphClient.Cypher.Match
                 ("(movie:Movie {title: {title}})-[OF_TYPE]-(genre:Genre)," +
-                //
-"(movie)-[ACTED_IN]-(actor:Actor)," +
+                "(movie)-[ACTED_IN]-(actor:Actor)," +
                 "(movie)-[DIRECTED]-(director:Director)")
                 .WithParam("title", title)
                 .Return(() => new MovieDetail
@@ -455,11 +464,12 @@ namespace NBPDom1i2.Controllers
             List<string> dates = ((IRawGraphClient)WebApiConfig.GraphClient)
                 .ExecuteGetCypherResults<string>(q).ToList();
 
-            if(dates[0]=="")
-            {
-                Session["Rented"] = "yes";
-                return MovieDetails(moviedetail.movie.title);
-            }
+            if (dates.Count != 0)
+                if (dates.First() == "")
+                {
+                    Session["Rented"] = "yes";
+                    return MovieDetails(moviedetail.movie.title);
+                }
 
             var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})," +
                 "(customer:Customer {username: {username}})" +
@@ -474,7 +484,6 @@ namespace NBPDom1i2.Controllers
 
 
             return RedirectToAction("MyRents", "Customers");
-
         }
 
         [HttpPost]
