@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using Neo4jClient;
 using Neo4jClient.Cypher;
+using System.Configuration;
+using System.Text;
+using ServiceStack.Redis;
 
 namespace NBPDom1i2.Controllers
 {
@@ -94,6 +97,15 @@ namespace NBPDom1i2.Controllers
 
             ((IRawGraphClient)WebApiConfig.GraphClient)
                     .ExecuteCypher(query);
+
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                redisClient.Del(Username);
+            }
 
             //return RedirectToAction("Index", "Customers");
             return RedirectToAction("Index", "Customers");

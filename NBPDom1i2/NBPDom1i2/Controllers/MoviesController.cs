@@ -9,6 +9,7 @@ using NBPDom1i2.ViewModels;
 using Neo4jClient;
 using Neo4jClient.Cypher;
 using ServiceStack.Redis;
+using System.Text;
 
 namespace NBPDom1i2.Controllers
 {
@@ -158,18 +159,21 @@ namespace NBPDom1i2.Controllers
         public ActionResult MovieDetails(string title)
         {
 
-            //
-            var host = ConfigurationManager.AppSettings["host"].ToString();
-            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
-            //
-
-            using (var redisClient = new RedisClient(_redisEndpoint))
+            if ((string)Session["role"] == "customer")
             {
-                redisClient.SetValue("covek", "pera");
+                var host = ConfigurationManager.AppSettings["host"].ToString();
+                var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+                RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+                //
+
+                using (var redisClient = new RedisClient(_redisEndpoint))
+                {
+                    byte[] array = Encoding.Default.GetBytes(title);
+                    redisClient.LRem((string)Session["username"], 0, array);
+                    redisClient.LPush((string)Session["username"], array);
+                }
             }
-
-
+            
             MovieDetail moviedetail = new MovieDetail();
             
             var data = WebApiConfig.GraphClient.Cypher.Match
@@ -441,6 +445,7 @@ namespace NBPDom1i2.Controllers
         [HttpPost]
         public ActionResult Rent(MovieDetail moviedetail)
         {
+
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             dictionary.Add("title", moviedetail.movie.title);
             dictionary.Add("username", (string)Session["username"]);
@@ -481,8 +486,19 @@ namespace NBPDom1i2.Controllers
             List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
                 .ExecuteGetCypherResults<Movie>(query).ToList();
 
+            //
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+            
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                byte[] array = Encoding.Default.GetBytes(moviedetail.movie.title);
 
+                redisClient.HIncrby("movies", array, 1);
+            }
 
+            //
             return RedirectToAction("MyRents", "Customers");
         }
 
@@ -495,8 +511,11 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("returnedon", DateTime.Now.ToString("yyyy-MM-dd"));
             dictionary.Add("username", (string)Session["username"]);
 
+            //
+            //dictionary.Add("copies", copies);
+
             var query = new Neo4jClient.Cypher.CypherQuery("match (movie:Movie {title:{title}})-[r:RENTS {rentedon:{rentedon}}]-(customer:Customer {username: {username}})" +
-                "set movie.copies = movie.copies+1, r.returnedon = {returnedon}" +
+                "set movie.copies = {copies}, r.returnedon = {returnedon}" +
                 "return movie",
                 dictionary, CypherResultMode.Set);
 
@@ -544,7 +563,17 @@ namespace NBPDom1i2.Controllers
             ((IRawGraphClient)WebApiConfig.GraphClient)
                 .ExecuteCypher(query);
 
-            return RedirectToAction("Index", "Movies");
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                byte[] movies = Encoding.Default.GetBytes("movies");
+                byte[] titl = Encoding.Default.GetBytes(Title);
+                redisClient.HDel(movies, titl);
+            }
+                return RedirectToAction("Index", "Movies");
         }
 
         public ActionResult Add()
@@ -606,6 +635,18 @@ namespace NBPDom1i2.Controllers
                         .ExecuteCypher(quer);
                 }
             }
+
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint _redisEndpoint = new RedisEndpoint(host, port);
+
+            using (var redisClient = new RedisClient(_redisEndpoint))
+            {
+                byte[] nula = Encoding.Default.GetBytes("0");
+                byte[] titl = Encoding.Default.GetBytes(moviedetail.movie.title);
+                redisClient.HSet("movies", titl, nula);
+            }
+
 
             return RedirectToAction("Index", "Movies");
         }
