@@ -52,6 +52,12 @@ namespace NBPDom1i2.Controllers
         [HttpPost]
         public ActionResult Create(Customer customer)
         {
+            if (customer.name == null || customer.surname == null ||
+                customer.username == null || customer.password == null)
+            {
+                Session["RegisterFail"] = "failed";
+                return RedirectToAction("NewCustomer");
+            }
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             dictionary.Add("name", customer.name);
             dictionary.Add("surname", customer.surname);
