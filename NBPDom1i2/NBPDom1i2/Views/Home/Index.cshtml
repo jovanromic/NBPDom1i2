@@ -4,28 +4,6 @@
     ViewBag.Title = "Home Page";
 }
 
-@if ((string)Session["role"] == "customer")
-{<div class="row">
-    <h2>Viewed recently</h2>
-        <div class="col-sm-8">
-            <table id="movies" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Movie</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach (string s in Model.historytitles)
-                    {
-                        <tr>
-                            <td><a href="http://localhost:51894/Movie/@s">@s</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>}
 <div class="row">
     <h2>Top15</h2>
     <div class="col-sm-8">
@@ -47,3 +25,49 @@
         </table>
     </div>
 </div>
+@if ((string)Session["role"] == "customer")
+{<div class="row">
+        <h2>Viewed recently</h2>
+        <div class="col-sm-8">
+            <table id="movies" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Movie</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (string s in Model.historytitles)
+                    {
+                        <tr>
+                            <td><a href="http://localhost:51894/Movie/@s">@s</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>}
+@if ((string)Session["role"] == "admin")
+{<div class="row">
+        <h2>Rented recently</h2>
+        <div class="col-sm-8">
+            <table id="movies" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Movie</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var s in Model.rentedlist)
+                    {
+                    <tr>
+                        <td><a href="http://localhost:51894/MyRentsAdmin/@s.Key">@s.Key</a></td>
+                        <td>@s.Value</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>}

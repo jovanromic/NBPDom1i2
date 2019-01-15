@@ -494,8 +494,12 @@ namespace NBPDom1i2.Controllers
             using (var redisClient = new RedisClient(_redisEndpoint))
             {
                 byte[] array = Encoding.Default.GetBytes(moviedetail.movie.title);
-
                 redisClient.HIncrby("movies", array, 1);
+
+                byte[] hidbajt = Encoding.Default.GetBytes("rented");
+                byte[] keybajt = Encoding.Default.GetBytes((string)Session["username"]);
+                redisClient.HDel(hidbajt, keybajt);
+                redisClient.HSet(hidbajt, keybajt, array);
             }
 
             //
@@ -509,7 +513,14 @@ namespace NBPDom1i2.Controllers
             dictionary.Add("title", RentedTitle);
             dictionary.Add("rentedon", RentedOn);
             dictionary.Add("returnedon", DateTime.Now.ToString("yyyy-MM-dd"));
-            dictionary.Add("username", (string)Session["username"]);
+            if((string)Session["role"] == "admin")
+            {
+                dictionary.Add("username", (string)Session["MyRentUsername"]);
+            }
+            else
+            {
+                dictionary.Add("username", (string)Session["username"]);
+            }
             dictionary.Add("copies", Copies+1);
 
             //
@@ -523,6 +534,10 @@ namespace NBPDom1i2.Controllers
             List<Movie> movies = ((IRawGraphClient)WebApiConfig.GraphClient)
                 .ExecuteGetCypherResults<Movie>(query).ToList();
 
+            if ((string)Session["role"] == "admin")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return RedirectToAction("MyRents", "Customers");
         }
 

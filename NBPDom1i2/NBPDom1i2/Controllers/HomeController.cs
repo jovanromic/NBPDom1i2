@@ -36,6 +36,39 @@ namespace NBPDom1i2.Controllers
                 }
             }
 
+            if ((string)Session["role"] == "admin")
+            {
+                Dictionary<string, string> tempdict = new Dictionary<string, string>();
+                byte[][] rented;
+                using (var redisClient = new RedisClient(_redisEndpoint))
+                {
+
+                    rented = redisClient.HGetAll("rented");
+                }
+
+                for (int i = rented.Length -1; i > 0; i -= 2)
+                {
+                    string value = Encoding.Default.GetString(rented[i]);
+                    string key = Encoding.Default.GetString(rented[i-1]);
+                    tempdict.Add(key, value);
+                }
+                int gr = 10;
+                if (tempdict.Count < 10)
+                {
+                    gr = tempdict.Count;
+                }
+                int ind = 0;
+                foreach (var v in tempdict)
+                {
+                    homelist.rentedlist.Add(v.Key, v.Value);
+                    ind++;
+                    if (ind == gr)
+                    {
+                        break;
+                    }
+                }
+            }
+
             Dictionary<string, int> dict = new Dictionary<string, int>();
             byte[][] ar;
 

@@ -9,16 +9,13 @@ namespace NBPDom1i2.ViewModels
         {
             public List<string> historytitles { get; set; }
             public Dictionary<string, int> top15 { get; set; }
+            public Dictionary<string, string> rentedlist { get; set; }
 
             public HomeList()
             {
                 historytitles = new List<string>();
                 top15 = new Dictionary<string, int>();
+                rentedlist = new Dictionary<string, string>();
             }
-
-            /*public void SortTop15()
-            {
-                top15.OrderByDescending(x => x.Value);
-            }*/
         }
 }

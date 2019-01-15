@@ -1,50 +1,52 @@
 ﻿@model List<NBPDom1i2.Models.SelectCustomerEditorViewModel>
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "Index";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @if ((string)Session["role"] == "admin")
 {
     using (Html.BeginForm("DeleteCustomer", "Customers"))
-    {   <div class="container-fluid">
-        <h2>Customers</h2>
-        <div class="row">
-            <div class="col-sm-8">
-                <table id="movies" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Count; i++)
-                        {
-                            if (Model[i].username != "admin")
-                            {
+    {<div class="container-fluid">
+            <h2>Customers</h2>
+            <div class="row">
+                <div class="col-sm-8">
+                    <table id="movies" class="table table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td>
-                                    @Model[i].name
-                                </td>
-                                <td>
-                                    @Model[i].username
-                                </td>
-                                    <td>
-                                        @using (Html.BeginForm("DeleteCustomer", "Customers"))
-                                        {
-                                            <input type="hidden" value="@Model[i].username" name="Username" />
-                                            <button type="submit" class="btn btn-primary">Delete</button>
-                                        }
-                                    </td>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th></th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                if (Model[i].username != "admin")
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model[i].name
+                                        </td>
+                                        <td>
+                                            @Model[i].username
+                                        </td>
+                                        <td>
+                                            @using (Html.BeginForm("DeleteCustomer", "Customers"))
+                                            {
+                                                <input type="hidden" value="@Model[i].username" name="Username" />
+                                                <button type="submit" class="btn btn-primary">Delete</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </div>
-    }
-}
+        </div>   
+      }
+ }

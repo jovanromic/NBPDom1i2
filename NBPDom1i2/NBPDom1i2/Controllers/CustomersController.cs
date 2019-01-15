@@ -67,7 +67,7 @@ namespace NBPDom1i2.Controllers
                     .Return(c => c.As<Customer>())
                     .Results;
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Authentication");
             }
             catch
             {
@@ -113,7 +113,8 @@ namespace NBPDom1i2.Controllers
 
         public ActionResult MyRents()
         {
-            if(Session["username"]!=null)
+            Session["MyRentusername"] = Session["username"];
+            if (Session["username"]!=null)
             {
                 Dictionary<string, object> dictionary = new Dictionary<string, object>();
                 dictionary.Add("username", Session["username"]);
@@ -141,6 +142,44 @@ namespace NBPDom1i2.Controllers
                 }
 
                 return View(mrmovies);
+            }
+            else
+                return RedirectToAction("LogIn", "Authentication");
+        }
+
+
+        [Route("myrentsadmin/{user}")]
+        public ActionResult MyRentsAdmin(string user)
+        {
+            Session["MyRentUsername"] = user;
+            if (Session["username"] != null)
+            {
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                dictionary.Add("username", Session["MyRentUsername"]);
+                MyRentMovie rd = new MyRentMovie();
+
+
+                var data = WebApiConfig.GraphClient.Cypher
+                    .Match("(m:Movie)<-[r:RENTS]-(:Customer {username:{username}})")
+                    .WithParams(dictionary)
+                    .Return((m, r) => new
+                    {
+                        Movie = m.As<Movie>(),
+                        Rentdate = r.As<MyRentMovie>()
+                    });
+
+                var results = data.Results.ToList();
+
+                List<MyRentMovie> mrmovies = new List<MyRentMovie>();
+
+                foreach (var result in results)
+                {
+                    result.Rentdate.rentedtitle = result.Movie.title;
+                    result.Rentdate.copies = result.Movie.copies;
+                    mrmovies.Add(result.Rentdate);
+                }
+
+                return View("MyRents", mrmovies);
             }
             else
                 return RedirectToAction("LogIn", "Authentication");
