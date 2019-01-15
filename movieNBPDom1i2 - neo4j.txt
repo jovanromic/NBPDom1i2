@@ -1,0 +1,138 @@
+CREATE (Oceans11:Movie {title:"Ocean's Eleven", released:2001, description:'Danny Ocean and his eleven accomplices plan to rob three Las Vegas casinos simultaneously.
+',copies: 5})
+CREATE (OnceUATinHollywood:Movie {title:'Once Upon a Time in Hollywood', released:2019, description:'A faded TV actor and his stunt double embark on an odyssey to make a name for themselves in the film industry during the Helter Skelter reign of terror in 1969 Los Angeles.',copies: 5})
+CREATE (Departed:Movie {title:'The Departed', released:2006, description:'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.',copies: 5})
+CREATE (Shutter:Movie {title:'Shutter Island', released:2010, description:'In 1954, a U.S. Marshal investigates the disappearance of a murderer, who escaped from a hospital for the criminally insane.',copies: 5})
+CREATE (BodyOfLies:Movie {title:'Body Of Lies', released:2008, description:'A CIA agent on the ground in Jordan hunts down a powerful terrorist leader while being caught between the unclear intentions of his American supervisors and Jordan Intelligence.',copies: 5})
+CREATE (Godfather:Movie {title:'The Godfather', released:1972, description:'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',copies: 5})
+CREATE (DarkKnight:Movie {title:'The Dark Knight', released:2008, description:'When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham. The Dark Knight must accept one of the greatest psychological and physical tests of his ability to fight injustice.',copies: 5})
+CREATE (FightClub:Movie {title:'Fight Club', released:1999, description:'An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.',copies: 5})
+CREATE (PulpFiction:Movie {title:'Pulp Fiction', released:1994, description:"The lives of two mob hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",copies: 5})
+CREATE (DirtyGrandpa:Movie {title:'Dirty Grandpa', released:2016, description:'Right before his wedding, an uptight guy is tricked into driving his grandfather, a lecherous former Army Lieutenant Colonel, to Florida for Spring Break.',copies: 5})
+CREATE (Shining:Movie {title:'The Shining', released:1980, description:'A family heads to an isolated hotel for the winter where an evil spiritual presence influences the father into violence, while his psychic son sees horrific forebodings from both past and future.',copies: 5})
+CREATE (Conjuring:Movie {title:'The Conjuring', released:2013, description:'Paranormal investigators Ed and Lorraine Warren work to help a family terrorized by a dark presence in their farmhouse.',copies: 5})
+CREATE (TheFighter:Movie {title:'The Fighter', released:2010, description:'Based on the story of Micky Ward, a fledgling boxer who tries to escape the shadow of his more famous but troubled older boxing brother and get his own shot at greatness.',copies: 5})
+CREATE (AmericanHustle:Movie {title:'American Hustle', released:2013, description:'A con man, Irving Rosenfeld, along with his seductive partner Sydney Prosser, is forced to work for a wild F.B.I. Agent, Richie DiMaso, who pushes them into a world of Jersey powerbrokers and the Mafia.',copies: 5})
+CREATE (Heat:Movie {title:'Heat', released:1995, description:'A group of professional bank robbers start to feel the heat from police when they unknowingly leave a clue at their latest heist.',copies: 5})
+CREATE (UpInTheAir:Movie {title:'Up in the Air', released:2009, description:'Ryan Bingham enjoys living out of a suitcase for his job, travelling around the country firing people, but finds that lifestyle threatened by the presence of a potential love interest, and a new hire.',copies: 5})
+
+CREATE (Clooney:Actor {name:'George Clooney'})
+CREATE (Pitt:Actor {name:'Brad Pitt'})
+CREATE (Damon:Actor {name:'Matt Damon'})
+CREATE (DiCaprio:Actor {name:'Leonardo DiCaprio'})
+CREATE (Pacino:Actor {name:'Al Pacino'})
+CREATE (Nicholson:Actor {name:'Jack Nicholson'})
+CREATE (Wahlberg:Actor {name:'Mark Wahlberg'})
+CREATE (Crowe:Actor {name:'Russell Crowe'})
+CREATE (Ruffalo:Actor {name:'Mark Ruffalo'})
+CREATE (Kingsley:Actor {name:'Ben Kinglsey'})
+CREATE (Brando:Actor {name:'Marlon Brando'})
+CREATE (Caan:Actor {name:'James Caan'})
+CREATE (Bale:Actor {name:'Christian Bale'})
+CREATE (Ledger:Actor {name:'Heath Ledger'})
+CREATE (Eckhart:Actor {name:'Aaron Eckhart'})
+CREATE (Norton:Actor {name:'Edward Norton'})
+CREATE (DzontraVolta:Actor {name:'John Travolta'})
+CREATE (Thurman:Actor {name:'Uma Thurman'})
+CREATE (DeNiro:Actor {name:'Robert De Niro'})
+CREATE (Efron:Actor {name:'Zac Efron'})
+CREATE (Farmiga:Actor {name:'Vera Farmiga'})
+CREATE (Adams:Actor {name:'Amy Adams'})
+
+CREATE (StevenSoder:Director {name:'Steven Soderbergh'})
+CREATE (Quentin:Director {name:'Quentin Tarantino'})
+CREATE (Scorsese:Director {name:'Martin Scorsese'})
+CREATE (Scott:Director {name:'Ridley Scott'})
+CREATE (Coppola:Director {name:'Francis Ford Coppola'})
+CREATE(Nolan:Director {name:'Christopher Nolan'})
+CREATE(Fincher:Director {name:'David Fincher'})
+CREATE(Mazer:Director {name:'Dan Mazer'})
+CREATE(Kubrick:Director {name:'Stanley Kubrick'})
+CREATE(Wan:Director {name:'James Wan'})
+CREATE(Russell:Director {name:'David O. Russell'})
+CREATE(Mann:Director {name:'Michael Mann'})
+CREATE(Reitman:Director {name:'Jason Reitman'})
+
+CREATE (Action:Genre {name:'Action'})
+CREATE (Comedy:Genre {name:'Comedy'})
+CREATE (Thriller:Genre {name:'Thriller'})
+CREATE (Drama:Genre {name:'Drama'})
+CREATE (Horror:Genre {name:'Horror'})
+CREATE (Crime:Genre {name:'Crime'})
+
+CREATE
+	(Clooney)-[:ACTED_IN]->(Oceans11),
+	(Pitt)-[:ACTED_IN]->(Oceans11),
+	(Damon)-[:ACTED_IN]->(Oceans11),
+	(StevenSoder)-[:DIRECTED]->(Oceans11),
+	(Oceans11)-[:OF_TYPE]->(Action),
+	(Pitt)-[:ACTED_IN]->(OnceUATinHollywood),
+	(DiCaprio)-[:ACTED_IN]->(OnceUATinHollywood),
+    (Pacino)-[:ACTED_IN]->(OnceUATinHollywood),
+	(Quentin)-[:DIRECTED]->(OnceUATinHollywood),
+	(OnceUATinHollywood)-[:OF_TYPE]->(Comedy),
+	(Damon)-[:ACTED_IN]->(Departed),
+	(DiCaprio)-[:ACTED_IN]->(Departed),
+    (Nicholson)-[:ACTED_IN]->(Departed),
+	(Wahlberg)-[:ACTED_IN]->(Departed),
+	(Scorsese)-[:DIRECTED]->(Departed),
+	(Departed)-[:OF_TYPE]->(Crime),
+	(DiCaprio)-[:ACTED_IN]->(Shutter),
+    (Ruffalo)-[:ACTED_IN]->(Shutter),
+	(Kingsley)-[:ACTED_IN]->(Shutter),
+	(Scorsese)-[:DIRECTED]->(Shutter),
+	(Shutter)-[:OF_TYPE]->(Thriller),
+	(Godfather)-[:OF_TYPE]->(Crime),
+	(DarkKnight)-[:OF_TYPE]->(Action),
+	(Brando)-[:ACTED_IN]->(Godfather),
+	(Caan)-[:ACTED_IN]->(Godfather),
+	(Pacino)-[:ACTED_IN]->(Godfather),
+	(Bale)-[:ACTED_IN]->(DarkKnight),
+	(Ledger)-[:ACTED_IN]->(DarkKnight),
+	(Eckhart)-[:ACTED_IN]->(DarkKnight),
+	(Coppola)-[:DIRECTED]->(Godfather),
+	(Nolan)-[:DIRECTED]->(DarkKnight),
+	(Pitt)-[:ACTED_IN]->(FightClub),
+	(Norton)-[:ACTED_IN]->(FightClub),
+	(Fincher)-[:DIRECTED]->(FightClub),
+	(FightClub)-[:OF_TYPE]->(Drama),
+	(PulpFiction)-[:OF_TYPE]->(Drama),
+	(DzontraVolta)-[:ACTED_IN]->(PulpFiction),
+	(Thurman)-[:ACTED_IN]->(PulpFiction),
+	(Quentin)-[:DIRECTED]->(PulpFiction),
+	(DirtyGrandpa)-[:OF_TYPE]->(Comedy),
+	(DeNiro)-[:ACTED_IN]->(DirtyGrandpa),
+	(Efron)-[:ACTED_IN]->(DirtyGrandpa),
+	(Mazer)-[:DIRECTED]->(DirtyGrandpa),
+	(Shining)-[:OF_TYPE]->(Horror),
+	(Nicholson)-[:ACTED_IN]->(Shining),
+	(Kubrick)-[:DIRECTED]->(Shining),
+	(Wan)-[:DIRECTED]->(Conjuring),
+	(Farmiga)-[:ACTED_IN]->(Conjuring),
+	(Conjuring)-[:OF_TYPE]->(Horror),
+	(TheFighter)-[:OF_TYPE]->(Drama),
+	(Wahlberg)-[:ACTED_IN]->(TheFighter),
+	(Bale)-[:ACTED_IN]->(TheFighter),
+	(Adams)-[:ACTED_IN]->(TheFighter),
+	(Russell)-[:DIRECTED]->(TheFighter),
+	(DiCaprio)-[:ACTED_IN]->(BodyOfLies),
+    (Crowe)-[:ACTED_IN]->(BodyOfLies),
+	(Scott)-[:DIRECTED]->(BodyOfLies),
+	(BodyOfLies)-[:OF_TYPE]->(Thriller),
+	(Bale)-[:ACTED_IN]->(AmericanHustle),
+	(Adams)-[:ACTED_IN]->(AmericanHustle),
+	(Russell)-[:DIRECTED]->(AmericanHustle),
+	(AmericanHustle)-[:OF_TYPE]->(Drama),
+	(Heat)-[:OF_TYPE]->(Crime),
+	(DeNiro)-[:ACTED_IN]->(Heat),
+	(Pacino)-[:ACTED_IN]->(Heat),
+	(Mann)-[:DIRECTED]->(Heat),
+	(UpInTheAir)-[:OF_TYPE]->(Drama),
+	(Farmiga)-[:ACTED_IN]->(UpInTheAir),
+	(Clooney)-[:ACTED_IN]->(UpInTheAir),
+	(Reitman)-[:DIRECTED]->(UpInTheAir)
+	
+CREATE (admin:Customer{name:'Admin', surname:'Admin', username:'admin', password:'admin', role:'admin'})
+
+//POTREBNO DODATI I OVAJ CONSTRAINT
+CREATE CONSTRAINT ON (c:Customer) ASSERT c.username IS UNIQUE
