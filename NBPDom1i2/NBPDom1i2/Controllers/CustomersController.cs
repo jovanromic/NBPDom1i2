@@ -131,18 +131,13 @@ namespace NBPDom1i2.Controllers
 
                 var results = data.Results.ToList();
 
-                //MovieRent movierents = new MovieRent();
-
                 List<MyRentMovie> mrmovies = new List<MyRentMovie>();
 
                 foreach (var result in results)
                 {
                     result.Rentdate.rentedtitle = result.Movie.title;
+                    result.Rentdate.copies = result.Movie.copies;
                     mrmovies.Add(result.Rentdate);
-                    /*movierents.movietitles.Add(result.Movie.title);
-                    movierents.movierentedondates.Add(result.Rentdate.rentedon);
-                    movierents.movieexpirydates.Add(result.Rentdate.expiry);
-                    movierents.moviereturnedondates.Add(result.Rentdate.returnedon);*/
                 }
 
                 return View(mrmovies);

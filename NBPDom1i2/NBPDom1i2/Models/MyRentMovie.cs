@@ -11,5 +11,6 @@ namespace NBPDom1i2.Models
         public string rentedon { get; set; }
         public string expiry { get; set; }
         public string returnedon { get; set; }
+        public int copies { get; set; }
     }
 }

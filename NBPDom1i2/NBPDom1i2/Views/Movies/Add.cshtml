@@ -7,7 +7,7 @@
 <h2>New movie</h2>
 @if((string)Session["AddFail"]=="failed")
 {
-    <h3 style="color:orangered">All fields are required</h3>
+    <h2 style="color:orangered">All fields are required</h2>
     Session["AddFail"] = "success";
 }
 @if ((string)Session["role"] == "admin")
